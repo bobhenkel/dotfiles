@@ -37,14 +37,14 @@ mod = "mod4"
 keys = [
     ## Bob Custom ##
     # Switch focus to specific monitor (out of two)
-    # Key([mod], "[",
-    #     lazy.to_screen(0),
-    #     desc='Keyboard focus to monitor 1'
-    #     ),
-    # Key([mod], "]",
-    #     lazy.to_screen(1),
-    #     desc='Keyboard focus to monitor 2'
-    #     ),
+     Key([mod], "z",
+         lazy.to_screen(0),
+         desc='Keyboard focus to monitor 1'
+         ),
+     Key([mod], "x",
+         lazy.to_screen(1),
+         desc='Keyboard focus to monitor 2'
+         ),
     # Switch focus of monitors
     Key([mod], "period",
         lazy.next_screen(),
