@@ -185,7 +185,7 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font='Arial',
+    font='Ubuntu Mono',
     fontsize=16,
     padding=3,
 )
@@ -194,7 +194,12 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.GroupBox(active='09E397', other_current_screen_border='FF8E13'),
+                widget.GroupBox(font="Ubuntu Bold",
+                                this_screen_border='#e1acff',#Purple
+                                this_current_screen_border='#09E397', #Hot Green
+                                other_current_screen_border='#09E397', #Hot Green
+                                other_screen_border='#e1acff' #Purple
+                               ),
                 widget.Prompt(),
                 widget.WindowName(),
                 #widget.TextBox("default config", name="default"),
