@@ -95,7 +95,7 @@ keys = [
         [mod, "shift"], "Return",
         lazy.layout.toggle_split()
     ),
-    Key([mod], "Return", lazy.spawn("alacritty")),
+    Key([mod], "Return", lazy.spawn("kitty")),
 
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
@@ -126,10 +126,10 @@ groups.extend([
           matches=[Match(wm_class=['google-chrome', 'Google-chrome'])]),
     Group('1', spawn='qutebrowser', layout='columns', persist=False,
           matches=[Match(wm_class=['qutebrowser'])]),
-    Group('2', spawn='alacritty', layout='column', persist=False,
-          matches=[Match(wm_class=['Alacritty'])]),
-    Group('2', spawn='alacritty', layout='column', persist=False,
-          matches=[Match(wm_class=['Alacritty'])]),
+    Group('2', spawn='kitty', layout='column', persist=False,
+          matches=[Match(wm_class=['kitty'])]),
+    Group('2', spawn='kitty', layout='column', persist=False,
+          matches=[Match(wm_class=['kitty'])]),
     Group('3', spawn="/home/bob/.local/share/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/bin/pycharm.sh",
           layout='max', persist=False,
           matches=[Match(wm_class=['jetbrains-pycharm'])]),
@@ -149,7 +149,7 @@ layouts = [
 ##### Bob DEFAULT THEME SETTINGS FOR LAYOUTS #####
 layout_theme = {"border_width": 2,
                 "margin": 6,
-                "border_focus": "e1acff",
+                "border_focus": "09E397",    #BOB CHANGE "border_focus": "e1acff",
                 "border_normal": "1D2330"
                 }
 
@@ -194,10 +194,10 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                widget.GroupBox(),
+                widget.GroupBox(active='09E397', other_current_screen_border='FF8E13'),
                 widget.Prompt(),
                 widget.WindowName(),
-                widget.TextBox("default config", name="default"),
+                #widget.TextBox("default config", name="default"),
                 widget.Systray(),
                 widget.Clock(format='%Y-%m-%d %a %I:%M %p'),
             ],
@@ -264,7 +264,7 @@ def client_new_hook(window):
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=logging.WARN,
     )
-    logging.warning("hello")
+    logging.warning("function client_new_hook called...")
     logging.warning(window)
 
 
@@ -284,7 +284,6 @@ def start_once():
     #     window.togroup("1")
     # elif window.match(wname="New Tab - Google Chrome"):
     #     window.togroup("1")
-
 
 # @libqtile.hook.subscribe.client_new
 # def clent_new_hook_spot(windows):
