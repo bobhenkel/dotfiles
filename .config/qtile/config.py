@@ -133,6 +133,8 @@ groups.extend([
     Group('3', spawn="/home/bob/.local/share/JetBrains/Toolbox/apps/PyCharm-P/ch-0/201.6668.115/bin/pycharm.sh",
           layout='max', persist=False,
           matches=[Match(wm_class=['jetbrains-pycharm'])]),
+    #Group('4', spawn='kitty ranger', layout='column', persist=False,
+          #matches=[Match(wm_class=['kitty'])]),
     Group('8', spawn='slack', layout='columns', persist=False,
           matches=[Match(wm_class=['slack', 'Slack'])]),
     Group('8', spawn='run_keybase', layout='columns', persist=False,
