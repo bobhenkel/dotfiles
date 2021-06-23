@@ -9,6 +9,7 @@ hc() {
 hc emit_hook reload
 
 xsetroot -solid '#5A8E3A'
+picom --experimental-backends --backend glx --vsync &
 
 # remove all existing keybindings
 hc keyunbind --all
