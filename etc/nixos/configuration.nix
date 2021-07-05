@@ -17,7 +17,7 @@
   # networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   nixpkgs.config.allowUnfree = true;
-  services.xserver.videoDrivers = [ "nvidia" ]; #Comment this on initial install and uncomment and rebuild after firest reboot otherwise I ran into failures building it.
+  services.xserver.videoDrivers = [ "nvidia" ];
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
@@ -40,11 +40,18 @@
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
-
+  services.xserver.displayManager.startx.enable = true;
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  #services.xserver.displayManager.gdm.enable = false;
+  services.xserver.displayManager.lightdm.enable = false;
+  #services.xserver.desktopManager.gnome.enable = false;
+  services.xserver.windowManager.herbstluftwm.enable = true;
+
+#environment.variables = {
+#    XDG_CONFIG_HOME = "~/.config";
+#  };
+#  services.xserver.windowManager.herbstluftwm.configFile = /home/bob/.config/herbstluftwm/autostart;
   
 
   # Configure keymap in X11
@@ -70,13 +77,24 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
-    firefox
-    git 
-    picom
-    fish
+    # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     alacritty
+    element-web
+    firefox
+    fish
+    git
+    hack-font
+    htop
+    #lxappearance
+    neovim
+    pcmanfm 
+    picom
+    polybar
+    wget
+    rofi
+    vim
+    vscode
+    xorg.xkill
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -107,3 +125,4 @@
   system.stateVersion = "21.05"; # Did you read the comment?
 
 }
+
