@@ -84,12 +84,15 @@
     fish
     git
     hack-font
+    hicolor-icon-theme #used for protonvpn-gui
     htop
     #lxappearance
     neovim
     pcmanfm 
     picom
     polybar
+    protonvpn-cli
+    protonvpn-gui
     wget
     rofi
     vim
