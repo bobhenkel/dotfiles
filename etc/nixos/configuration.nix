@@ -95,6 +95,7 @@
     protonvpn-gui
     wget
     rofi
+    tango-icon-theme #pcmanfm icons show up a blank place holders without this.
     vim
     vscode
     xorg.xkill
