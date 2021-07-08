@@ -83,14 +83,15 @@
     firefox
     fish
     git
-    hack-font
     hicolor-icon-theme #used for protonvpn-gui
     htop
+    killall #used specifically for polybar launch.sh
     #lxappearance
     neovim
     pcmanfm 
     picom
     polybar
+    polybarFull
     protonvpn-cli
     protonvpn-gui
     wget
@@ -100,6 +101,15 @@
     vscode
     xorg.xkill
   ];
+
+  fonts.fonts = with pkgs; [
+    hack-font
+    font-awesome_4
+    siji
+    tamsyn
+  ];
+
+  security.sudo.wheelNeedsPassword = false;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
