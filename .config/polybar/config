@@ -1,0 +1,296 @@
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+[settings]
+;https://github.com/jaagr/polybar/wiki/Configuration#application-settings
+throttle-output = 5
+throttle-output-for = 10
+screenchange-reload = true
+compositing-background = over
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+;==================== COLORS
+[colors]
+white = #d1d1d1
+gray = #585858
+black = #090909
+red = #c795ae
+blue = #95aec7
+yellow = #c7ae95
+green = #aec795
+
+background = #eA242424 
+foreground = ${colors.white}
+background-alt = #AA223536
+foreground-alt = #55
+primary = #1ff859
+secondary = #1ff859
+alert = #bd2c40
+
+[variables]
+;main-monitor=DVI-I-1
+main-monitor=${env:MONITOR}
+
+;==================== WM
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+
+;================================
+;================================ herbstluftWM bar
+;================================
+
+[bar/mainbar-herbstluftwm]
+monitor = ${variables.main-monitor}
+override-redirect = true
+enable-ipc = true
+
+;width = 2520px
+;height = 35
+;offset-x = 1300px
+;offset-y = 2px
+
+;fixed-center = true
+;bottom = false
+
+width = 100%
+height = 20
+;offset-x = 1%
+;offset-y = 1%
+radius = 5.0  ;controls the circle shape of the edge of the bar. More value more roundness/radius
+fixed-center = true
+bottom = false
+
+separator = |
+background = ${colors.background}
+foreground = ${colors.foreground}
+line-size = 1
+line-color = #f00
+
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 0
+ 
+;https://github.com/jaagr/polybar/wiki/Fonts
+;font-0 = "Tamsyn:style=Medium:pixelsize=16;3"
+font-0 = "Hack:style=Bold:pixelsize=11;3"
+font-1 = "FontAwesome:style=Solid;3"
+font-2 = "Siji:style=Regular"
+
+modules-left = info-hlwm-workspaces
+modules-center = hlwm-monitor0
+modules-right = vpn_status monitor_toggle monitor_aspect follows_mouse cpu memory gputemp date volume powermenu
+ 
+tray-detached = false
+tray-offset-x = 2
+tray-offset-y = 0
+tray-padding = 2
+tray-maxsize = 20
+tray-scale = 1.0
+tray-position = right
+tray-background = ${colors.background}
+ 
+scroll-up = herbstclient use_index -1
+scroll-down = herbstclient use_index +1
+
+;================================
+;================================ Modules
+;================================
+
+; HLWM workspace info
+
+[module/info-hlwm-workspaces]
+type = custom/script
+exec = ~/.config/polybar/info-hlwm-workspaces/info-hlwm-workspaces.sh
+tail = true
+scroll-up = herbstclient use_index -1 --skip-visible &
+scroll-down = herbstclient use_index +1 --skip-visible &
+label-active-font=1
+
+[module/hlwm-monitor0]
+type = custom/script
+exec = ~/.config/polybar/hlwm-monitor0.sh
+tail = true
+scroll-up = herbstclient use_index -1 --skip-visible &
+scroll-down = herbstclient use_index +1 --skip-visible &
+
+;==================== Mod CPU
+;[module/cpu]
+;type = internal/cpu
+;interval = 1
+;format = <label>
+;label = CPU:%percentage%%
+;ramp-coreload-spacing = 1
+;ramp-coreload-0 = a
+;ramp-coreload-1 = b
+;ramp-coreload-2 = ▃
+;ramp-coreload-3 = ▄
+;ramp-coreload-4 = ▅
+;ramp-coreload-5 = ▆
+;ramp-coreload-6 = ▇
+;ramp-coreload-7 = █
+
+;==================== Mod MEM
+[module/memory]
+type = internal/memory
+interval = 3
+format = <label>
+label = RAM:%gb_free%
+
+
+;==================== simpler volume module no slider
+[module/pavolume]
+type = internal/pulseaudio
+
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+sink = alsa_output.pci-0000_00_14.2.analog-stereo
+use-ui-max = false
+interval = 5
+
+;==================== Weather
+;[module/weather]
+;type = custom/script
+;exec = curl -s wttr.in/minneapolis?format=1
+;interval = 3600
+ 
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:25:...%
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = " %d.%m.%y"
+date-alt = " %Y.%m.%d"
+
+time = %r
+time-alt = " %H:%M:%S"
+
+format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = ${colors.primary}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/alsa
+
+; Soundcard to be used
+master-soundcard = default
+speaker-soundcard = default
+headphone-soundcard = default
+
+; Name of the master mixer
+; Default: Master
+master-mixer = Master
+
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted =  sound muted
+
+bar-volume-width = 8
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+;bar-volume-indicator-font = 3
+bar-volume-indicator-foreground = #ff
+bar-volume-fill = -
+;bar-volume-fill-font = 3
+bar-volume-empty = -
+;bar-volume-empty-font = 3
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/powermenu]
+type = custom/menu
+
+label-open = Power 
+label-open-foreground = ${colors.primary}
+label-close =  cancel
+label-close-foreground = ${colors.primary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = "xdotool search --classname navigator key ctrl+q; sleep 2; sudo reboot"
+
+menu-2-0 = power off
+menu-2-0-exec = "xdotool search --classname navigator key ctrl+q; sleep 2; sudo poweroff"
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+[module/gputemp]
+type = custom/script
+exec = ~/.config/polybar/gpu-temp.sh
+interval = 5
+
+[module/follows_mouse]
+type = custom/script
+exec = ~/.config/polybar/follows_mouse.sh
+interval = .5
+click-left = herbstclient set focus_follows_mouse toggle
+
+[module/monitor_aspect]
+type = custom/script
+exec = ~/.config/polybar/monitor_aspect.sh
+interval = .5
+;click-left = ~/.config/polybar/monitor_aspect_toggle.sh
+click-left = herbstclient floating toggle
+
+[module/monitor_toggle]
+type = custom/script
+exec = echo "DISPLAY"
+interval = 60
+click-left = ~/dotfiles/xmenu/menu.sh
+
+[module/vpn_status]
+type = custom/script
+exec = ~/.config/polybar/protonvpn_status.sh
+interval = .5
+format-underline = ${colors.primary}
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp> <label>
+;format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.foreground-alt}
+
