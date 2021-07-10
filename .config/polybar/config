@@ -1,143 +1,296 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
+;=====================================================
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;=====================================================
+[settings]
+;https://github.com/jaagr/polybar/wiki/Configuration#application-settings
+throttle-output = 5
+throttle-output-for = 10
+screenchange-reload = true
+compositing-background = over
+compositing-foreground = over
+compositing-overline = over
+compositing-underline = over
+compositing-border = over
+;==================== COLORS
+[colors]
+white = #d1d1d1
+gray = #585858
+black = #090909
+red = #c795ae
+blue = #95aec7
+yellow = #c7ae95
+green = #aec795
 
-{ config, pkgs, ... }:
+background = #eA242424 
+foreground = ${colors.white}
+background-alt = #AA223536
+foreground-alt = #55
+primary = #1ff859
+secondary = #1ff859
+alert = #bd2c40
 
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+[variables]
+;main-monitor=DVI-I-1
+main-monitor=${env:MONITOR}
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true; #setback to true
+;==================== WM
+[global/wm]
+margin-top = 5
+margin-bottom = 5
 
-  # networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  nixpkgs.config.allowUnfree = true;
-  services.xserver.videoDrivers = [ "nvidia" ];
-  # Set your time zone.
-  time.timeZone = "America/Chicago";
 
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking.useDHCP = false;
-  networking.interfaces.enp2s0.useDHCP = true;
+;================================
+;================================ herbstluftWM bar
+;================================
 
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+[bar/mainbar-herbstluftwm]
+monitor = ${variables.main-monitor}
+override-redirect = true
+enable-ipc = true
 
-  # Select internationalisation properties.
-   i18n.defaultLocale = "en_US.UTF-8";
-   console = {
-     font = "Lat2-Terminus16";
-     keyMap = "us";
-   };
+;width = 2520px
+;height = 35
+;offset-x = 1300px
+;offset-y = 2px
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.displayManager.startx.enable = true;
+;fixed-center = true
+;bottom = false
 
-  # Enable the GNOME Desktop Environment.
-  #services.xserver.displayManager.gdm.enable = false;
-  services.xserver.displayManager.lightdm.enable = false;
-  #services.xserver.desktopManager.gnome.enable = false;
-  services.xserver.windowManager.herbstluftwm.enable = true;
+width = 100%
+height = 20
+;offset-x = 1%
+;offset-y = 1%
+radius = 5.0  ;controls the circle shape of the edge of the bar. More value more roundness/radius
+fixed-center = true
+bottom = false
 
-#environment.variables = {
-#    XDG_CONFIG_HOME = "~/.config";
-#  };
-#  services.xserver.windowManager.herbstluftwm.configFile = /home/bob/.config/herbstluftwm/autostart;
-  
+separator = |
+background = ${colors.background}
+foreground = ${colors.foreground}
+line-size = 1
+line-color = #f00
 
-  # Configure keymap in X11
-  services.xserver.layout = "us";
-  # services.xserver.xkbOptions = "eurosign:e";
+padding-right = 0
+module-margin-left = 0
+module-margin-right = 0
+ 
+;https://github.com/jaagr/polybar/wiki/Fonts
+;font-0 = "Tamsyn:style=Medium:pixelsize=16;3"
+font-0 = "Hack:style=Bold:pixelsize=11;3"
+font-1 = "FontAwesome:style=Solid;3"
+font-2 = "Siji:style=Regular"
 
-  # Enable CUPS to print documents.
-  # services.printing.enable = true;
+modules-left = info-hlwm-workspaces
+modules-center = hlwm-monitor0
+modules-right = vpn_status monitor_toggle monitor_aspect follows_mouse cpu memory gputemp date volume powermenu
+ 
+tray-detached = false
+tray-offset-x = 2
+tray-offset-y = 0
+tray-padding = 2
+tray-maxsize = 20
+tray-scale = 1.0
+tray-position = right
+tray-background = ${colors.background}
+ 
+scroll-up = herbstclient use_index -1
+scroll-down = herbstclient use_index +1
 
-  # Enable sound.
-  sound.enable = true;
-  hardware.pulseaudio.enable = true;
+;================================
+;================================ Modules
+;================================
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+; HLWM workspace info
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.bob = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-  };
+[module/info-hlwm-workspaces]
+type = custom/script
+exec = ~/.config/polybar/info-hlwm-workspaces/info-hlwm-workspaces.sh
+tail = true
+scroll-up = herbstclient use_index -1 --skip-visible &
+scroll-down = herbstclient use_index +1 --skip-visible &
+label-active-font=1
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    alacritty
-    element-web
-    firefox
-    fish
-    git
-    ghc
-    hicolor-icon-theme #used for protonvpn-gui
-    htop
-    killall #used specifically for polybar launch.sh
-    #lxappearance
-    neovim
-    pcmanfm 
-    picom
-    polybar
-    polybarFull
-    protonvpn-cli
-    protonvpn-gui
-    wget
-    rofi
-    tango-icon-theme #pcmanfm icons show up a blank place holders without this.
-    vim
-    vscode
-    xorg.xkill
-  ];
+[module/hlwm-monitor0]
+type = custom/script
+exec = ~/.config/polybar/hlwm-monitor0.sh
+tail = true
+scroll-up = herbstclient use_index -1 --skip-visible &
+scroll-down = herbstclient use_index +1 --skip-visible &
 
-  fonts.fonts = with pkgs; [
-    hack-font
-    font-awesome_4
-    siji
-    tamsyn
-  ];
+;==================== Mod CPU
+;[module/cpu]
+;type = internal/cpu
+;interval = 1
+;format = <label>
+;label = CPU:%percentage%%
+;ramp-coreload-spacing = 1
+;ramp-coreload-0 = a
+;ramp-coreload-1 = b
+;ramp-coreload-2 = ▃
+;ramp-coreload-3 = ▄
+;ramp-coreload-4 = ▅
+;ramp-coreload-5 = ▆
+;ramp-coreload-6 = ▇
+;ramp-coreload-7 = █
 
-  security.sudo.wheelNeedsPassword = false;
+;==================== Mod MEM
+[module/memory]
+type = internal/memory
+interval = 3
+format = <label>
+label = RAM:%gb_free%
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
 
-  # List services that you want to enable:
+;==================== simpler volume module no slider
+[module/pavolume]
+type = internal/pulseaudio
 
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+sink = alsa_output.pci-0000_00_14.2.analog-stereo
+use-ui-max = false
+interval = 5
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+;==================== Weather
+;[module/weather]
+;type = custom/script
+;exec = curl -s wttr.in/minneapolis?format=1
+;interval = 3600
+ 
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:25:...%
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "21.05"; # Did you read the comment?
+[module/date]
+type = internal/date
+interval = 5
 
-}
+date = " %d.%m.%y"
+date-alt = " %Y.%m.%d"
+
+time = %r
+time-alt = " %H:%M:%S"
+
+format-prefix = 
+format-prefix-foreground = ${colors.foreground-alt}
+;format-underline = ${colors.primary}
+
+label = %date% %time%
+
+[module/volume]
+type = internal/alsa
+
+; Soundcard to be used
+master-soundcard = default
+speaker-soundcard = default
+headphone-soundcard = default
+
+; Name of the master mixer
+; Default: Master
+master-mixer = Master
+
+format-volume = <label-volume> <bar-volume>
+label-volume = 
+label-volume-foreground = ${root.foreground}
+
+format-muted-prefix = " "
+format-muted-foreground = ${colors.foreground-alt}
+label-muted =  sound muted
+
+bar-volume-width = 8
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-gradient = false
+bar-volume-indicator = |
+;bar-volume-indicator-font = 3
+bar-volume-indicator-foreground = #ff
+bar-volume-fill = -
+;bar-volume-fill-font = 3
+bar-volume-empty = -
+;bar-volume-empty-font = 3
+bar-volume-empty-foreground = ${colors.foreground-alt}
+
+[module/powermenu]
+type = custom/menu
+
+label-open = Power 
+label-open-foreground = ${colors.primary}
+label-close =  cancel
+label-close-foreground = ${colors.primary}
+label-separator = |
+label-separator-foreground = ${colors.foreground-alt}
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+
+menu-1-0 = cancel
+menu-1-0-exec = menu-open-0
+menu-1-1 = reboot
+menu-1-1-exec = "xdotool search --classname navigator key ctrl+q; sleep 2; sudo reboot"
+
+menu-2-0 = power off
+menu-2-0-exec = "xdotool search --classname navigator key ctrl+q; sleep 2; sudo poweroff"
+menu-2-1 = cancel
+menu-2-1-exec = menu-open-0
+
+[module/gputemp]
+type = custom/script
+exec = ~/.config/polybar/gpu-temp.sh
+interval = 5
+
+[module/follows_mouse]
+type = custom/script
+exec = ~/.config/polybar/follows_mouse.sh
+interval = .5
+click-left = herbstclient set focus_follows_mouse toggle
+
+[module/monitor_aspect]
+type = custom/script
+exec = ~/.config/polybar/monitor_aspect.sh
+interval = .5
+;click-left = ~/.config/polybar/monitor_aspect_toggle.sh
+click-left = herbstclient floating toggle
+
+[module/monitor_toggle]
+type = custom/script
+exec = echo "DISPLAY"
+interval = 60
+click-left = ~/dotfiles/xmenu/menu.sh
+
+[module/vpn_status]
+type = custom/script
+exec = ~/.config/polybar/protonvpn_status.sh
+interval = .5
+format-underline = ${colors.primary}
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <ramp> <label>
+;format-underline = #f50a4d
+format-warn = <ramp> <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.foreground-alt}
 
