@@ -71,23 +71,37 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.bob = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "audio" ]; # Enable ‘sudo’ for the user.
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    amfora #gemini client written in go
     alacritty
+    appimage-run
+    bat
+    dracula-theme
     element-web
     firefox
     fish
+    gcc # to use rust this is needed
     git
+    ghc
     hicolor-icon-theme #used for protonvpn-gui
     htop
-    killall #used specifically for polybar launch.sh
-    #lxappearance
+    jump
+    koreader #ebook reader
+    killall #used specifically for polybar launch.shi
+    lagrange #gui gemini browser
+    lxappearance
+    vlc
+    #ncspot # Seems to be buggy and stop playing music all the time moving to spotifyd and spotify-tui to see if that is better. Issue seemed to be with protonvpn using protonvpn dns leak proof feature. Turned that off now better.
     neovim
+    nnn #cli file manager
+    nyxt
+    obs-studio
     pcmanfm 
     picom
     polybar
@@ -96,14 +110,28 @@
     protonvpn-gui
     wget
     rofi
+    sxiv #image viewer
     tango-icon-theme #pcmanfm icons show up a blank place holders without this.
+    unzip
+    rustup
+    slock
+    spaceFM
+    spotifyd
+    spotify-tui
     vim
     vscode
+    xautolock #is being started in ~/.xinitrc
+    xdo
+    xdotool
+    xidlehook
     xorg.xkill
   ];
 
+  security.wrappers.slock.source = "${pkgs.slock.out}/bin/slock";  #Allows regular user to run slock without disabling OOM killer see https://github.com/NixOS/nixpkgs/issues/9656#issuecomment-137719381 and https://github.com/NixOS/nixpkgs/issues/9656#issuecomment-362873714
+  nixpkgs.config.joypixels.acceptLicense = true;
   fonts.fonts = with pkgs; [
     hack-font
+    joypixels #get nice emoji font for polybar
     font-awesome_4
     siji
     tamsyn
@@ -120,7 +148,7 @@
   # };
 
   # List services that you want to enable:
-
+  services.spotifyd.enable = true;
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
